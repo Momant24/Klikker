@@ -30,7 +30,7 @@ while velg:
 
     skjerm.blit(tittel, (SW//2 - tittel.get_width()//2, SH//4))
     skjerm.blit(tekst1, (SW//2 - tekst1.get_width()//2, SH//2))
-
+    navn = input("Skriv navn")
     pg.display.update()
    
     for hendelse in pg.event.get():
@@ -42,6 +42,7 @@ while velg:
             if hendelse.key == pg.K_1:
                 start = 1
                 velg = False 
+                user = navn
         
 
 class Spiller:
@@ -49,22 +50,25 @@ class Spiller:
         self._navn = navn
         self._kliks = 0
         self._upgrade = 0
+    
+    def klik(self):
+        self._kliks += 1
+        
 
 skjerm.fill('black')
 pg.draw.circle(skjerm, (200, 0, 0), (sirkelx, sirkely), 120)
+
+user = Spiller(user)
 
 while True:
     for hendelse in pg.event.get():
         if hendelse.type == pg.QUIT:
             pg.quit()
             sys.exit()
-        if hendelse.type == pg.MOUSEBUTTONDOWN and mouse_x:
-            print("Hello")
-
-    click = pg.mouse.get_pressed()
-    if click[0] == True:
-        mouse_x, mouse_y = pg.mouse.get_pos()
-        print(mouse_x)
+        if hendelse.type == pg.MOUSEBUTTONDOWN:
+            x, y = pg.mouse.get_pos()
+            if x >= sirkelx and y >= sirkely:
+                user.klik()
 
     pg.display.update()
     klokke.tick(5)
