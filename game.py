@@ -20,7 +20,7 @@ BLOKK_STORELSE = 50
 navn = "spiller"
 # Font størrelse og utsene 
 FONT = pg.font.Font("Pygame/Klikker/font.ttf", 30)
-
+TEKST = pg.font.Font("Pygame/Klikker/font.ttf", 15)
 skjerm = pg.display.set_mode((SW, SH))
 pg.display.set_caption("Klikker")
 klokke = pg.time.Clock()
@@ -93,7 +93,7 @@ class Spiller:
 score = FONT.render("1", True, "white")
 
 
-tekstgi = FONT.render("", True, "white")
+tekstgi = TEKST.render("", True, "white")
 
 spiller1 = Spiller(navn)
 
@@ -107,11 +107,11 @@ while True:
             x, y = pg.mouse.get_pos()
             if x >= sirkelx - radius and x <= sirkelx + radius and y >= sirkely - radius and y <= sirkely + radius:
                 spiller1.klik()
-                tekstgi = FONT.render("", True, "white")
+                tekstgi = TEKST.render("", True, "white")
             if x >= 700:
                 if y <= 50:
                     tekst = spiller1.oppgradering("Mer kliks per kliks")
-                    tekstgi = FONT.render(f"{tekst}", True, "white")
+                    tekstgi = TEKST.render(f"{tekst}", True, "white")
                     
                         
                     
