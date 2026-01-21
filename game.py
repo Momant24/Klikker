@@ -1,6 +1,7 @@
 import pygame as pg
 import sys
 import random
+import time
 
 
 # Konstanter
@@ -56,24 +57,33 @@ class Spiller:
         self._upgrade = 0
         self._kliks_perklik = 1
         self._kostnad = 0
+        self._merkliksantal = 0
 
     
     def klik(self):
         self._kliks += self._kliks_perklik
     
-    def merklik(self):
-        self._kliks_perklik += 1
 
-    def kostnad(self, sendtin):
-        typ = sendtin
-        if typ == "Skjor_Pinne":
-            pris = 50
-        elif typ == "Pinne":
-            pris = 5
+        
 
-        if pris != 0:
-        self._kliks -= pris
-        return(f"Du kjøpte {typ} for {pris} og har nå {self._kliks} kliks igjen")
+    def oppgradering(self, sendtin):
+        if sendtin == "Mer kliks per kliks":
+            Merklikspris = 50 + self._merkliksantal * 10
+            if Merklikspris <= self._kliks:
+                self._kliks -= Merklikspris
+                self._kliks_perklik += 1
+                self._merkliksantal += 1 
+                return(f"Du kjøpte {sendtin} for {Merklikspris} og har nå {self._kliks} kliks igjen og gjør {self._kliks_perklik} kliks per klik")
+            else:
+                return(f"Det koster {Merklikspris} du har bare {self._kliks}")
+                
+            
+        elif sendtin == "Pinne":
+            pris = 0
+
+
+        
+        return("Du har ikke råd")
         
 
         
@@ -81,12 +91,14 @@ class Spiller:
 
 
 score = FONT.render("1", True, "white")
-score_rect = score.get_rect(center=(SW/2, SH/20))
 
+
+tekstgi = FONT.render("", True, "white")
 
 spiller1 = Spiller(navn)
 
 while True:
+    skjerm.fill('black')
     for hendelse in pg.event.get():
         if hendelse.type == pg.QUIT:
             pg.quit()
@@ -95,14 +107,20 @@ while True:
             x, y = pg.mouse.get_pos()
             if x >= sirkelx - radius and x <= sirkelx + radius and y >= sirkely - radius and y <= sirkely + radius:
                 spiller1.klik()
+                tekstgi = FONT.render("", True, "white")
             if x >= 700:
                 if y <= 50:
-                    if kliks
-                    spiller1.merklik()
-                    print("Hei")
-    skjerm.fill('black')
+                    tekst = spiller1.oppgradering("Mer kliks per kliks")
+                    tekstgi = FONT.render(f"{tekst}", True, "white")
+                    
+                        
+                    
+                    
+    
     pg.draw.circle(skjerm, (200, 0, 0), (sirkelx, sirkely), radius)
     score = FONT.render(f"Antal kliks: {spiller1._kliks}", True, "white")
+
+    skjerm.blit(tekstgi, (SW/2 - tekstgi.get_width()//2, 50))
     skjerm.blit(score, (SW/2 - score.get_width()//2, 10))
 
     pg.display.update()
