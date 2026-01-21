@@ -43,6 +43,9 @@ while velg:
             if hendelse.key == pg.K_1:
                 start = 1
                 velg = False 
+        
+        if hendelse.type == pg.MOUSEBUTTONDOWN:
+            velg = False
                 
         
 
@@ -51,10 +54,28 @@ class Spiller:
         self._navn = navn
         self._kliks = 0
         self._upgrade = 0
+        self._kliks_perklik = 1
+        self._kostnad = 0
+
     
     def klik(self):
-        self._kliks += 1
-        print("Hei")
+        self._kliks += self._kliks_perklik
+    
+    def merklik(self):
+        self._kliks_perklik += 1
+
+    def kostnad(self, sendtin):
+        typ = sendtin
+        if typ == "Skjor_Pinne":
+            pris = 50
+        elif typ == "Pinne":
+            pris = 5
+
+        if pris != 0:
+        self._kliks -= pris
+        return(f"Du kjøpte {typ} for {pris} og har nå {self._kliks} kliks igjen")
+        
+
         
 
 
@@ -72,9 +93,13 @@ while True:
             sys.exit()
         if hendelse.type == pg.MOUSEBUTTONDOWN:
             x, y = pg.mouse.get_pos()
-            if x >= sirkelx - radius and x <= sirkelx + radius and y >= sirkely - radius and y <= sirkely + radius :
+            if x >= sirkelx - radius and x <= sirkelx + radius and y >= sirkely - radius and y <= sirkely + radius:
                 spiller1.klik()
-    
+            if x >= 700:
+                if y <= 50:
+                    if kliks
+                    spiller1.merklik()
+                    print("Hei")
     skjerm.fill('black')
     pg.draw.circle(skjerm, (200, 0, 0), (sirkelx, sirkely), radius)
     score = FONT.render(f"Antal kliks: {spiller1._kliks}", True, "white")
