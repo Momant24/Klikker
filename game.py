@@ -57,30 +57,48 @@ class Spiller:
         self._upgrade = 0
         self._kliks_perklik = 1
         self._kostnad = 0
-        self._merkliksantal = 0
+        self._merklikspris = 30
+        self._klikkere = 0
+        self._klikerpris = 200
+        self._klikkerkliks = 1
+        self._klikerklikspris = 1000
 
-    
     def klik(self):
         self._kliks += self._kliks_perklik
     
-
-        
+    def autoklik(self):
+        self._kliks += round(self._klikkerkliks * self._klikkere) 
 
     def oppgradering(self, sendtin):
         if sendtin == "Mer kliks per kliks":
-            Merklikspris = 50 + self._merkliksantal * 10
-            if Merklikspris <= self._kliks:
-                self._kliks -= Merklikspris
+            
+            if self._merklikspris <= self._kliks:
+                self._kliks -= self._merklikspris
                 self._kliks_perklik += 1
-                self._merkliksantal += 1 
-                return(f"Du kjøpte {sendtin} for {Merklikspris} og har nå {self._kliks} kliks igjen og gjør {self._kliks_perklik} kliks per klik")
+                self._merklikspris = round(self._merklikspris * 1.1)
+                return(f"Du kjøpte {sendtin} og har nå {self._kliks} kliks igjen og gjør {self._kliks_perklik} kliks per klik")
             else:
-                return(f"Det koster {Merklikspris} du har bare {self._kliks}")
+                return(f"Det koster {self._merklikspris} du har bare {self._kliks}")
+        if sendtin == "Klikkere":
+            if self._klikerpris <= self._kliks:
+                self._kliks -= self._klikerpris
+                self._klikkere += 1
+                self._klikerpris = round(self._klikerpris * 1.1)
+                return(f"Du kjøpte {sendtin} og har nå {self._klikkere} klikere som kliker for deg")
+            else:
+                return(f"Det koster {self._klikerpris} du har bare {self._kliks}")
+        if sendtin == "Klikkerper":
+            if self._klikerklikspris <= self._kliks:
+                self._kliks -= self._klikerklikspris
+                self._klikkerkliks += 1
+                self._klikerklikspris = round(self._klikerklikspris * 1.1)
+                return(f"Du kjøpte {sendtin} og klikerne gjør {self._klikkerkliks} per klikk")
+            else:
+                return(f"Det koster {self._klikerklikspris} du har bare {self._kliks}")
+
                 
             
-        elif sendtin == "Pinne":
-            pris = 0
-
+      
 
         
         return("Du har ikke råd")
@@ -112,8 +130,15 @@ while True:
                 if y <= 50:
                     tekst = spiller1.oppgradering("Mer kliks per kliks")
                     tekstgi = TEKST.render(f"{tekst}", True, "white")
+                elif y <= 100 and y >= 51:
+                    tekst = spiller1.oppgradering("Klikkere")
+                    tekstgi = TEKST.render(f"{tekst}", True, "white")
+                elif y <= 200 and y >= 101:
+                    tekst = spiller1.oppgradering("Klikkerper")
+                    tekstgi = TEKST.render(f"{tekst}", True, "white")
                     
-                        
+    if spiller1._klikkere > 0:
+        spiller1.autoklik()                    
                     
                     
     
