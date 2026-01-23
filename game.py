@@ -11,10 +11,17 @@ SW, SH = 800, 600
 sirkelx = 400
 sirkely = 300
 radius = 120
+Upgradebrede = 700
 
 
 # Initialiser pygame
 pg.init()
+
+upgrades = [
+{"navn": "Mer kliks per kliks","rect": pg.Rect(650, 50, 140, 40)},
+{"navn": "Klikkere","rect": pg.Rect(650, 100, 140, 40)},
+{"navn": "Klikkerper","rect": pg.Rect(650, 150, 140, 40)}
+]
 
 BLOKK_STORELSE = 50
 navn = "spiller"
@@ -103,6 +110,13 @@ class Spiller:
         
         return("Du har ikke råd")
         
+def tegnuppgrades():
+  for upgrade in upgrades:
+    pg.draw.rect(skjerm, (80, 80, 80), upgrade["rect"] )
+    pg.draw.rect(skjerm, "white", upgrade["rect"], 2)
+
+    tekst = TEKST.render(upgrade["navn"], True, "white")
+    skjerm.blit(tekst,(upgrade["rect"].x + 5, upgrade["rect"].y + 10))
 
         
 
@@ -126,17 +140,11 @@ while True:
             if x >= sirkelx - radius and x <= sirkelx + radius and y >= sirkely - radius and y <= sirkely + radius:
                 spiller1.klik()
                 tekstgi = TEKST.render("", True, "white")
-            if x >= 700:
-                if y <= 50:
-                    tekst = spiller1.oppgradering("Mer kliks per kliks")
-                    tekstgi = TEKST.render(f"{tekst}", True, "white")
-                elif y <= 100 and y >= 51:
-                    tekst = spiller1.oppgradering("Klikkere")
-                    tekstgi = TEKST.render(f"{tekst}", True, "white")
-                elif y <= 200 and y >= 101:
-                    tekst = spiller1.oppgradering("Klikkerper")
-                    tekstgi = TEKST.render(f"{tekst}", True, "white")
-                    
+            for upgrade in upgrades:
+                if upgrade["rect"].collidepoint(hendelse.pos):
+                    tekst = spiller1.oppgradering(upgrade["navn"])
+                    tekstgi = TEKST.render(tekst, True, "white")
+
     if spiller1._klikkere > 0:
         spiller1.autoklik()                    
                     
@@ -147,6 +155,8 @@ while True:
 
     skjerm.blit(tekstgi, (SW/2 - tekstgi.get_width()//2, 50))
     skjerm.blit(score, (SW/2 - score.get_width()//2, 10))
+
+    tegnuppgrades()
 
     pg.display.update()
     klokke.tick(5)
