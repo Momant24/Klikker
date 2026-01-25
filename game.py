@@ -12,7 +12,8 @@ sirkelx = 400
 sirkely = 300
 radius = 120
 Upgradebrede = 700
-
+byttbilde = 200
+bnumer = 1
 
 # Initialiser pygame
 pg.init()
@@ -22,6 +23,8 @@ upgrades = [
 {"navn": "Klikkere","rect": pg.Rect(650, 100, 140, 40)},
 {"navn": "Klikkerper","rect": pg.Rect(650, 150, 140, 40)}
 ]
+
+
 
 BLOKK_STORELSE = 50
 navn = "spiller"
@@ -61,6 +64,7 @@ class Spiller:
     def __init__(self, navn):
         self._navn = navn
         self._kliks = 0
+        self._alltidkliks = 0
         self._upgrade = 0
         self._kliks_perklik = 1
         self._kostnad = 0
@@ -70,11 +74,13 @@ class Spiller:
         self._klikkerkliks = 1
         self._klikerklikspris = 1000
 
+
     def klik(self):
         self._kliks += self._kliks_perklik
-    
+        self._alltidkliks += self._kliks_perklik
+
     def autoklik(self):
-        self._kliks += round(self._klikkerkliks * self._klikkere) 
+        self._kliks += round(self._klikkerkliks * self._klikkere)
 
     def oppgradering(self, sendtin):
         if sendtin == "Mer kliks per kliks":
@@ -120,7 +126,8 @@ def tegnuppgrades():
 
         
 
-
+bilde = pg.image.load("Pygame/Klikker/bilder/Trump1.png").convert_alpha()
+bilde_sirkel = pg.transform.scale(bilde, (radius*2, radius*2))
 
 score = FONT.render("1", True, "white")
 
@@ -149,13 +156,19 @@ while True:
         spiller1.autoklik()                    
                     
                     
-    
-    pg.draw.circle(skjerm, (200, 0, 0), (sirkelx, sirkely), radius)
+
+    skjerm.blit(bilde_sirkel, (sirkelx - radius, sirkely - radius))
+
     score = FONT.render(f"Antal kliks: {spiller1._kliks}", True, "white")
 
     skjerm.blit(tekstgi, (SW/2 - tekstgi.get_width()//2, 50))
     skjerm.blit(score, (SW/2 - score.get_width()//2, 10))
 
+    if byttbilde < spiller1._alltidkliks and bnumer != 11:
+        bnumer += 1
+        bilde = pg.image.load(f"Pygame/Klikker/bilder/Trump{bnumer}.png").convert_alpha()
+        bilde_sirkel = pg.transform.scale(bilde, (radius*2, radius*2))
+        byttbilde += 500
     tegnuppgrades()
 
     pg.display.update()
