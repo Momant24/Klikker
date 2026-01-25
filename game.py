@@ -151,7 +151,13 @@ while True:
                 if upgrade["rect"].collidepoint(hendelse.pos):
                     tekst = spiller1.oppgradering(upgrade["navn"])
                     tekstgi = TEKST.render(tekst, True, "white")
-
+            if byttbilde < spiller1._alltidkliks and bnumer != 11:
+                bnumer += 1
+                bilde = pg.image.load(f"Pygame/Klikker/bilder/Trump{bnumer}.png").convert_alpha()
+                bilde_sirkel = pg.transform.scale(bilde, (radius*2, radius*2))
+                byttbilde += 500
+                if byttbilde > 1500:
+                    byttbilde *= 1.3
     if spiller1._klikkere > 0:
         spiller1.autoklik()                    
                     
@@ -164,11 +170,7 @@ while True:
     skjerm.blit(tekstgi, (SW/2 - tekstgi.get_width()//2, 50))
     skjerm.blit(score, (SW/2 - score.get_width()//2, 10))
 
-    if byttbilde < spiller1._alltidkliks and bnumer != 11:
-        bnumer += 1
-        bilde = pg.image.load(f"Pygame/Klikker/bilder/Trump{bnumer}.png").convert_alpha()
-        bilde_sirkel = pg.transform.scale(bilde, (radius*2, radius*2))
-        byttbilde += 500
+
     tegnuppgrades()
 
     pg.display.update()
