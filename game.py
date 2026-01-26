@@ -14,6 +14,7 @@ radius = 120
 Upgradebrede = 700
 byttbilde = 200
 bnumer = 1
+nerf = 0
 
 # Initialiser pygame
 pg.init()
@@ -187,10 +188,11 @@ while True:
                 if byttbilde > 1500:
                     byttbilde *= 1.1
 
-    nerf = random.randint(1, 10)
-    if nerf < 8:
+    nerf += 1
+    if nerf >= 10:
         if spiller1._klikkere > 0:
-            spiller1.autoklik()                    
+            spiller1.autoklik()
+            nerf = 0                 
                     
                     
 
