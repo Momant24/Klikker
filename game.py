@@ -24,13 +24,15 @@ upgrades = [
 {"navn": "Klikkerper","rect": pg.Rect(650, 150, 140, 40)}
 ]
 
-
+qotes = ["I will build a great, great wall on our southern border, and I will have Mexico pay for that wall. Mark my words.", "I will be phenomenal to the women. I mean, I want to help women.", "The concept of global warming was created by and for the Chinese in order to make U.S. manufacturing non-competitive.", "I have never seen a thin person drinking Diet Coke.", "I'm intelligent. Some people would say I'm very, very, very intelligent.", "My fingers are long and beautiful, as, it has been well documented, are various other parts of my body.", "They're eating the dogs! They're eating the cats! ", "They're eating the pets of the people who live there. ", "I think apologizing's a great thing, but you have to be wrong. I will absolutely apologize, sometime in the hopefully distant future, if I'm ever wrong", "Man, we could use a big fat dose of global warming", "Heidi Klum. Sadly, she's no longer a 10", "a beautiful child went to have the vaccine, and came back and a week later had a tremendous fever, got very, very sick, now is autistic"]
+qotessure = ["Wrong!", "Fake news.", "Sad!", "Total disaster.", "Disgraceful.", "Pathetic.", "A complete joke.", "You’re fired.", "So bad.", "Very unfair.", "Rigged.", "Corrupt.", "Weak.", "Loser.", "A mess.", "Out of control.", "Incompetent.", "Dishonest.", "Terrible.", "So sad.", "Embarrassing.", "Clueless.", "A failure.", "Stupid decision.", "Really bad.", "Unbelievable.", "A joke.", "No idea.", "Failing.", "Disaster.", "Terribly run.", "Fake.", "Not good.", "Very weak.", "Hopeless.", "Shameful.", "Bad deal.", "Totally broken.", "Awful.", "A scam.", "Ridiculous.", "Nonsense.", "Wrong again.", "Very bad people.", "Low energy.", "Crooked.", "An embarrassment.", "Bad leadership.", "A total mess."]
 
 BLOKK_STORELSE = 50
 navn = "spiller"
 # Font størrelse og utsene 
 FONT = pg.font.Font("Pygame/Klikker/font.ttf", 30)
 TEKST = pg.font.Font("Pygame/Klikker/font.ttf", 15)
+QOTETEKST = pg.font.Font("Pygame/Klikker/font.ttf", 13)
 skjerm = pg.display.set_mode((SW, SH))
 pg.display.set_caption("Klikker")
 klokke = pg.time.Clock()
@@ -130,7 +132,13 @@ bilde = pg.image.load("Pygame/Klikker/bilder/Trump1.png").convert_alpha()
 bilde_sirkel = pg.transform.scale(bilde, (radius*2, radius*2))
 
 score = FONT.render("1", True, "white")
+rando = random.randint(0, 48)
+tekst2 = qotessure[rando]
+tekstgi2 = TEKST.render(tekst2, True, "white")
 
+rando = random.randint(0, 10)
+tekst3 = qotes[rando]
+qotestekst = QOTETEKST.render(tekst3, True, "white")
 
 tekstgi = TEKST.render("", True, "white")
 
@@ -147,6 +155,21 @@ while True:
             if x >= sirkelx - radius and x <= sirkelx + radius and y >= sirkely - radius and y <= sirkely + radius:
                 spiller1.klik()
                 tekstgi = TEKST.render("", True, "white")
+                tall = random.randint(1, 15)
+                if tall < 3:
+                    rando = random.randint(0, 48)
+                    tekst2 = qotessure[rando]
+                    tekstgi2 = TEKST.render(tekst2, True, "white")
+                    
+                    
+                tall2 = random.randint(1, 100)
+                if tall2 >= 90:
+                    rando = random.randint(0, 10)
+                    tekst3 = qotes[rando]
+                    qotestekst = QOTETEKST.render(tekst3, True, "white")
+
+                
+
             for upgrade in upgrades:
                 if upgrade["rect"].collidepoint(hendelse.pos):
                     tekst = spiller1.oppgradering(upgrade["navn"])
@@ -157,7 +180,9 @@ while True:
                 bilde_sirkel = pg.transform.scale(bilde, (radius*2, radius*2))
                 byttbilde += 500
                 if byttbilde > 1500:
-                    byttbilde *= 1.3
+                    byttbilde *= 1.1
+
+
     if spiller1._klikkere > 0:
         spiller1.autoklik()                    
                     
@@ -168,6 +193,8 @@ while True:
     score = FONT.render(f"Antal kliks: {spiller1._kliks}", True, "white")
 
     skjerm.blit(tekstgi, (SW/2 - tekstgi.get_width()//2, 50))
+    skjerm.blit(tekstgi2, (SW/4 - tekstgi2.get_width()//2, 300))
+    skjerm.blit(qotestekst, (SW/2 - qotestekst.get_width()//2, 450))
     skjerm.blit(score, (SW/2 - score.get_width()//2, 10))
 
 
