@@ -69,7 +69,6 @@ class Spiller:
         self._alltidkliks = 0
         self._upgrade = 0
         self._kliks_perklik = 1
-        self._kostnad = 0
         self._merklikspris = 30
         self._klikkere = 0
         self._klikerpris = 200
@@ -82,7 +81,7 @@ class Spiller:
         self._alltidkliks += self._kliks_perklik
 
     def autoklik(self):
-        self._kliks += round(self._klikkerkliks * self._klikkere)
+        self._kliks += (self._klikkerkliks * self._klikkere)
 
     def oppgradering(self, sendtin):
         if sendtin == "Mer kliks per kliks":
@@ -145,7 +144,9 @@ tekstgi = TEKST.render("", True, "white")
 spiller1 = Spiller(navn)
 
 while True:
+    bilde_sirkel = pg.transform.scale(bilde, (radius*2, radius*2))
     skjerm.fill('black')
+    skjerm.blit(bilde_sirkel, (sirkelx - radius, sirkely - radius))
     for hendelse in pg.event.get():
         if hendelse.type == pg.QUIT:
             pg.quit()
@@ -156,6 +157,10 @@ while True:
                 spiller1.klik()
                 tekstgi = TEKST.render("", True, "white")
                 tall = random.randint(1, 15)
+                bilde_sirkel = pg.transform.scale(bilde, (radius*2.1, radius*2.1))
+                skjerm.blit(bilde_sirkel, (sirkelx - radius, sirkely - radius))
+
+
                 if tall < 3:
                     rando = random.randint(0, 48)
                     tekst2 = qotessure[rando]
@@ -182,9 +187,10 @@ while True:
                 if byttbilde > 1500:
                     byttbilde *= 1.1
 
-
-    if spiller1._klikkere > 0:
-        spiller1.autoklik()                    
+    nerf = random.randint(1, 10)
+    if nerf < 8:
+        if spiller1._klikkere > 0:
+            spiller1.autoklik()                    
                     
                     
 
@@ -201,6 +207,6 @@ while True:
     tegnuppgrades()
 
     pg.display.update()
-    klokke.tick(5)
+    klokke.tick(20)
 
 
