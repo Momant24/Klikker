@@ -24,9 +24,12 @@ upgrades = [
 {"navn": "Klikkere","rect": pg.Rect(650, 100, 140, 40)},
 {"navn": "Klikkerper","rect": pg.Rect(650, 150, 140, 40)}
 ]
+posklikers = []
+klikkers =[ ]
 
-qotes = ["I will build a great, great wall on our southern border, and I will have Mexico pay for that wall. Mark my words.", "I will be phenomenal to the women. I mean, I want to help women.", "The concept of global warming was created by and for the Chinese in order to make U.S. manufacturing non-competitive.", "I have never seen a thin person drinking Diet Coke.", "I'm intelligent. Some people would say I'm very, very, very intelligent.", "My fingers are long and beautiful, as, it has been well documented, are various other parts of my body.", "They're eating the dogs! They're eating the cats! ", "They're eating the pets of the people who live there. ", "I think apologizing's a great thing, but you have to be wrong. I will absolutely apologize, sometime in the hopefully distant future, if I'm ever wrong", "Man, we could use a big fat dose of global warming", "Heidi Klum. Sadly, she's no longer a 10", "a beautiful child went to have the vaccine, and came back and a week later had a tremendous fever, got very, very sick, now is autistic"]
-qotessure = ["Wrong!", "Fake news.", "Sad!", "Total disaster.", "Disgraceful.", "Pathetic.", "A complete joke.", "You’re fired.", "So bad.", "Very unfair.", "Rigged.", "Corrupt.", "Weak.", "Loser.", "A mess.", "Out of control.", "Incompetent.", "Dishonest.", "Terrible.", "So sad.", "Embarrassing.", "Clueless.", "A failure.", "Stupid decision.", "Really bad.", "Unbelievable.", "A joke.", "No idea.", "Failing.", "Disaster.", "Terribly run.", "Fake.", "Not good.", "Very weak.", "Hopeless.", "Shameful.", "Bad deal.", "Totally broken.", "Awful.", "A scam.", "Ridiculous.", "Nonsense.", "Wrong again.", "Very bad people.", "Low energy.", "Crooked.", "An embarrassment.", "Bad leadership.", "A total mess."]
+
+qotes = ["I will build a great, great wall on our southern border, and I will have Mexico pay for that wall. Mark my words.", "I will be phenomenal to the women. I mean, I want to help women.", "The concept of global warming was created by and for the Chinese in order to make U.S. manufacturing non-competitive.", "I have never seen a thin person drinking Diet Coke.", "I'm intelligent. Some people would say I'm very, very, very intelligent.", "My fingers are long and beautiful, as, it has been well documented, are various other parts of my body.", "They're eating the dogs! They're eating the cats! ", "They're eating the pets of the people who live there. ", "I think apologizing's a great thing, but you have to be wrong. I will absolutely apologize, sometime in the hopefully distant future, if I'm ever wrong", "Man, we could use a big fat dose of global warming", "Heidi Klum. Sadly, she's no longer a 10", "a beautiful child went to have the vaccine, and came back and a week later had a tremendous fever, got very, very sick, now is autistic", "Part of the beauty of me is that I am very rich.", "I think the only difference between me and the other candidates is that I'm more honest and my women are more beautiful.", "I love the poorly educated.", "I have a great relationship with the blacks.", "@ariannahuff is unattractive both inside and out. I fully understand why her former husband left her for a man- he made a good decision.", " I've said that if Ivanka weren't my daughter, perhaps I would be dating her.", "I actually don't have a bad hairline.", "The Biden administration spent $8 million making mice transgender", "Canada should become our Cherished 51st State", "I don’t have a racist bone in my body.", "There’s nothing I love more than women, but they’re really a lot different than portrayed. They are far worse than men, far more aggressive", ""]
+qotessure = ["Wrong!", "Fake news.", "Sad!", "Total disaster.", "Disgraceful.", "Pathetic.", "A complete joke.", "You’re fired.", "So bad.", "Very unfair.", "Rigged.", "Corrupt.", "Weak.", "Loser.", "A mess.", "Out of control.", "Incompetent.", "Dishonest.", "Terrible.", "So sad.", "Embarrassing.", "Clueless.", "A failure.", "Stupid decision.", "Really bad.", "Unbelievable.", "A joke.", "No idea.", "Failing.", "Disaster.", "Terribly run.", "Fake.", "Not good.", "Very weak.", "Hopeless.", "Shameful.", "Bad deal.", "Totally broken.", "Awful.", "A scam.", "Ridiculous.", "Nonsense.", "Wrong again.", "Very bad people.", "Low energy.", "Crooked.", "An embarrassment.", "Bad leadership.", "A total mess.", "Ghina", "I love women"]
 
 BLOKK_STORELSE = 50
 navn = "spiller"
@@ -126,6 +129,12 @@ def tegnuppgrades():
     tekst = TEKST.render(upgrade["navn"], True, "white")
     skjerm.blit(tekst,(upgrade["rect"].x + 5, upgrade["rect"].y + 10))
 
+def tegnkliker():
+    for kliker in klikkers:
+        pg.draw.rect(skjerm, (80, 80, 80), kliker["rect"] )
+
+
+
         
 
 bilde = pg.image.load("Pygame/Klikker/bilder/Trump1.png").convert_alpha()
@@ -163,14 +172,14 @@ while True:
 
 
                 if tall < 3:
-                    rando = random.randint(0, 48)
+                    rando = random.randint(0, 50)
                     tekst2 = qotessure[rando]
                     tekstgi2 = TEKST.render(tekst2, True, "white")
                     
                     
                 tall2 = random.randint(1, 100)
                 if tall2 >= 90:
-                    rando = random.randint(0, 10)
+                    rando = random.randint(0, 21)
                     tekst3 = qotes[rando]
                     qotestekst = QOTETEKST.render(tekst3, True, "white")
 
