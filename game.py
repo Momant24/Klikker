@@ -19,11 +19,7 @@ nerf = 0
 # Initialiser pygame
 pg.init()
 
-upgrades = [
-{"navn": "Mer kliks per kliks","rect": pg.Rect(650, 50, 140, 40)},
-{"navn": "Klikkere","rect": pg.Rect(650, 100, 140, 40)},
-{"navn": "Klikkerper","rect": pg.Rect(650, 150, 140, 40)}
-]
+
 posklikers = []
 klikkers =[ ]
 
@@ -120,14 +116,27 @@ class Spiller:
 
         
         return("Du har ikke råd")
-        
+spiller1 = Spiller(navn)
+
+upgrades = [
+{"navn": "Mer kliks per kliks","rect": pg.Rect(650, 50, 140, 40),"pris": spiller1._merklikspris},
+{"navn": "Klikkere","rect": pg.Rect(650, 100, 140, 40), "pris": spiller1._klikerpris},
+{"navn": "Klikkerper","rect": pg.Rect(650, 150, 140, 40), "pris": spiller1._klikerklikspris}
+]
+
+
+
+
 def tegnuppgrades():
   for upgrade in upgrades:
     pg.draw.rect(skjerm, (80, 80, 80), upgrade["rect"] )
     pg.draw.rect(skjerm, "white", upgrade["rect"], 2)
 
-    tekst = TEKST.render(upgrade["navn"], True, "white")
+    tekst = TEKST.render(upgrade["navn"] + f" {upgrade["pris"]}", True, "white")
     skjerm.blit(tekst,(upgrade["rect"].x + 5, upgrade["rect"].y + 10))
+
+
+
 
 def tegnkliker():
     for kliker in klikkers:
@@ -151,7 +160,7 @@ qotestekst = QOTETEKST.render(tekst3, True, "white")
 
 tekstgi = TEKST.render("", True, "white")
 
-spiller1 = Spiller(navn)
+
 
 while True:
     bilde_sirkel = pg.transform.scale(bilde, (radius*2, radius*2))
@@ -189,6 +198,9 @@ while True:
                 if upgrade["rect"].collidepoint(hendelse.pos):
                     tekst = spiller1.oppgradering(upgrade["navn"])
                     tekstgi = TEKST.render(tekst, True, "white")
+                    upgrades[0]["pris"] = spiller1._merklikspris
+                    upgrades[1]["pris"] = spiller1._klikerpris
+                    upgrades[2]["pris"] = spiller1._klikerklikspris
             if byttbilde < spiller1._alltidkliks and bnumer != 11:
                 bnumer += 1
                 bilde = pg.image.load(f"Pygame/Klikker/bilder/Trump{bnumer}.png").convert_alpha()
