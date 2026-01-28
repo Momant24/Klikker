@@ -90,23 +90,23 @@ class Spiller:
                 self._kliks -= self._merklikspris
                 self._kliks_perklik += 1
                 self._merklikspris = round(self._merklikspris * 1.1)
-                return(f"Du kjøpte {sendtin} og har nå {self._kliks} kliks igjen og gjør {self._kliks_perklik} kliks per klik")
+                return(f"Du kjøpte {sendtin}")
             else:
-                return(f"Det koster {self._merklikspris} du har bare {self._kliks}")
+                return(f"Det koster {self._merklikspris}")
         if sendtin == "Klikkere":
             if self._klikerpris <= self._kliks:
                 self._kliks -= self._klikerpris
                 self._klikkere += 1
                 self._klikerpris = round(self._klikerpris * 1.1)
-                return(f"Du kjøpte {sendtin} og har nå {self._klikkere} klikere som kliker for deg")
+                return(f"Du kjøpte {sendtin}")
             else:
-                return(f"Det koster {self._klikerpris} du har bare {self._kliks}")
+                return(f"Det koster {self._klikerpris}")
         if sendtin == "Klikkerper":
             if self._klikerklikspris <= self._kliks:
                 self._kliks -= self._klikerklikspris
                 self._klikkerkliks += 1
                 self._klikerklikspris = round(self._klikerklikspris * 1.1)
-                return(f"Du kjøpte {sendtin} og klikerne gjør {self._klikkerkliks} per klikk")
+                return(f"Du kjøpte {sendtin}")
             else:
                 return(f"Det koster {self._klikerklikspris} du har bare {self._kliks}")
 
@@ -127,6 +127,7 @@ upgrades = [
 
 
 
+
 def tegnuppgrades():
   for upgrade in upgrades:
     pg.draw.rect(skjerm, (80, 80, 80), upgrade["rect"] )
@@ -135,7 +136,17 @@ def tegnuppgrades():
     tekst = TEKST.render(upgrade["navn"] + f" {upgrade["pris"]}", True, "white")
     skjerm.blit(tekst,(upgrade["rect"].x + 5, upgrade["rect"].y + 10))
 
+def tegntekstantall():
+    tingduhar = [
+    {"tekst": "Hvor mange kliks per klik du gjør:", "antall": spiller1._kliks_perklik, "rect": pg.Rect(25, 50, 140, 40)},
+    {"tekst": "Hvor mange klikkere du har:", "antall": spiller1._klikkere, "rect": pg.Rect(25, 70, 140, 40)},
+    {"tekst": "Hvor mange kliks en klikker gjør:", "antall": spiller1._klikkerkliks, "rect": pg.Rect(25, 90, 140, 40)}
+    ]
+    for ting in tingduhar:
 
+
+        tekst = TEKST.render(ting["tekst"] + f" {ting["antall"]}", True, "white")
+        skjerm.blit(tekst,(ting["rect"].x + 5, ting["rect"].y + 10))
 
 
 def tegnkliker():
@@ -228,6 +239,7 @@ while True:
 
 
     tegnuppgrades()
+    tegntekstantall()
 
     pg.display.update()
     klokke.tick(20)
