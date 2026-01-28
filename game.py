@@ -71,7 +71,7 @@ class Spiller:
         self._kliks_perklik = 1
         self._merklikspris = 30
         self._klikkere = 0
-        self._klikerpris = 200
+        self._klikerpris = 20
         self._klikkerkliks = 1
         self._klikerklikspris = 1000
 
@@ -84,6 +84,7 @@ class Spiller:
         self._kliks += (self._klikkerkliks * self._klikkere)
 
     def oppgradering(self, sendtin):
+        global bilde
         if sendtin == "Mer kliks per kliks":
             
             if self._merklikspris <= self._kliks:
@@ -98,6 +99,10 @@ class Spiller:
                 self._kliks -= self._klikerpris
                 self._klikkere += 1
                 self._klikerpris = round(self._klikerpris * 1.1)
+                adklikerbilde()
+                bilde = pg.image.load(f"Pygame/Klikker/bilder/Trump7.png").convert_alpha()
+
+                
                 return(f"Du kjøpte {sendtin}")
             else:
                 return(f"Det koster {self._klikerpris}")
@@ -151,13 +156,25 @@ def tegntekstantall():
 
 def tegnkliker():
     for kliker in klikkers:
-        pg.draw.rect(skjerm, (80, 80, 80), kliker["rect"] )
+        skjerm.blit(kliker["bilde"], kliker["rect"])
 
 
+def adklikerbilde():
+
+    bilder = ["Pygame/Klikker/bilder/Kamala.png", "Pygame/Klikker/bilder/vaksine.png", "Pygame/Klikker/bilder/Peace.png", "Pygame/Klikker/bilder/Pride.png", "Pygame/Klikker/bilder/Mandani.png", "Pygame/Klikker/bilder/Demokratene.png"]
+
+
+    hvilken = random.randint(0, len(bilder)-1)
+    bilde = pg.image.load(bilder[hvilken]).convert_alpha()
+    bilde = pg.transform.scale(bilde, (50, 50))
+    xplas = random.randint(50, 750 - bilde.get_width())
+    yplas = random.randint(50, 550 - bilde.get_height())
+    klikkers.append({"bilde": bilde, "rect":pg.Rect(xplas, yplas, 140, 40) })    
 
         
 
-bilde = pg.image.load("Pygame/Klikker/bilder/Trump1.png").convert_alpha()
+bildenå = pg.image.load("Pygame/Klikker/bilder/Trump1.png").convert_alpha()
+bilde = bildenå
 bilde_sirkel = pg.transform.scale(bilde, (radius*2, radius*2))
 
 score = FONT.render("1", True, "white")
@@ -176,6 +193,7 @@ tekstgi = TEKST.render("", True, "white")
 while True:
     bilde_sirkel = pg.transform.scale(bilde, (radius*2, radius*2))
     skjerm.fill('black')
+    tegnkliker()
     skjerm.blit(bilde_sirkel, (sirkelx - radius, sirkely - radius))
     for hendelse in pg.event.get():
         if hendelse.type == pg.QUIT:
@@ -187,8 +205,10 @@ while True:
                 spiller1.klik()
                 tekstgi = TEKST.render("", True, "white")
                 tall = random.randint(1, 15)
+                bilde = bildenå
                 bilde_sirkel = pg.transform.scale(bilde, (radius*2.1, radius*2.1))
                 skjerm.blit(bilde_sirkel, (sirkelx - radius, sirkely - radius))
+                
 
 
                 if tall < 3:
@@ -214,8 +234,9 @@ while True:
                     upgrades[2]["pris"] = spiller1._klikerklikspris
             if byttbilde < spiller1._alltidkliks and bnumer != 11:
                 bnumer += 1
-                bilde = pg.image.load(f"Pygame/Klikker/bilder/Trump{bnumer}.png").convert_alpha()
-                bilde_sirkel = pg.transform.scale(bilde, (radius*2, radius*2))
+                bildenå = pg.image.load(f"Pygame/Klikker/bilder/Trump{bnumer}.png").convert_alpha()
+                bilde = bildenå
+                bilde_sirkelnå = pg.transform.scale(bilde, (radius*2, radius*2))
                 byttbilde += 500
                 if byttbilde > 1500:
                     byttbilde *= 1.1
@@ -237,11 +258,12 @@ while True:
     skjerm.blit(qotestekst, (SW/2 - qotestekst.get_width()//2, 450))
     skjerm.blit(score, (SW/2 - score.get_width()//2, 10))
 
-
+    
     tegnuppgrades()
     tegntekstantall()
 
+
     pg.display.update()
-    klokke.tick(20)
+    klokke.tick(40)
 
 
