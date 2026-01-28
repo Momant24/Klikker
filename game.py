@@ -15,7 +15,7 @@ Upgradebrede = 700
 byttbilde = 200
 bnumer = 1
 nerf = 0
-
+teller = 0
 # Initialiser pygame
 pg.init()
 
@@ -71,7 +71,7 @@ class Spiller:
         self._kliks_perklik = 1
         self._merklikspris = 30
         self._klikkere = 0
-        self._klikerpris = 20
+        self._klikerpris = 100
         self._klikkerkliks = 1
         self._klikerklikspris = 1000
 
@@ -152,11 +152,16 @@ def tegntekstantall():
 
         tekst = TEKST.render(ting["tekst"] + f" {ting["antall"]}", True, "white")
         skjerm.blit(tekst,(ting["rect"].x + 5, ting["rect"].y + 10))
+bildexstørelse = 50
+bildeystørelse = 50
 
-
-def tegnkliker():
+def tegnkliker(bredde, høyde):
     for kliker in klikkers:
-        skjerm.blit(kliker["bilde"], kliker["rect"])
+        bilde = pg.transform.scale(kliker["bilde"], (bredde, høyde))
+        midt_x, midt_y = kliker["rect"].center
+        nytt_rect = bilde.get_rect(center=(midt_x, midt_y))
+        
+        skjerm.blit(bilde, nytt_rect)
 
 
 def adklikerbilde():
@@ -193,7 +198,9 @@ tekstgi = TEKST.render("", True, "white")
 while True:
     bilde_sirkel = pg.transform.scale(bilde, (radius*2, radius*2))
     skjerm.fill('black')
-    tegnkliker()
+    if spiller1._klikkere > 0:
+        tegnkliker(bildexstørelse, bildeystørelse)
+
     skjerm.blit(bilde_sirkel, (sirkelx - radius, sirkely - radius))
     for hendelse in pg.event.get():
         if hendelse.type == pg.QUIT:
@@ -242,11 +249,24 @@ while True:
                     byttbilde *= 1.1
 
     nerf += 1
-    if nerf >= 10:
+    if nerf >= 20:
         if spiller1._klikkere > 0:
             spiller1.autoklik()
-            nerf = 0                 
-                    
+            nerf = 0
+
+    teller += 1
+    if teller >= 20:
+        
+        if spiller1._klikkere > 0:
+            bildexstørelse = 60
+            bildeystørelse = 60
+            spiller1.autoklik()
+            teller = 0                  
+    if teller >= 10 and teller <= 20:
+        bildexstørelse = 50
+        bildeystørelse = 50
+        
+
                     
 
     skjerm.blit(bilde_sirkel, (sirkelx - radius, sirkely - radius))
@@ -264,6 +284,6 @@ while True:
 
 
     pg.display.update()
-    klokke.tick(40)
+    klokke.tick(60)
 
 
