@@ -80,7 +80,7 @@ class Spiller:
         self._klikerpris = 100
         self._klikkerkliks = 1
         self._klikerklikspris = 5
-        self._defendgrønlandpris = 10
+        self._defendgrønlandpris = 1000
         self._grønnlandcoins = 0
 
 
@@ -323,14 +323,10 @@ while True:
                 if byttbilde > 1500:
                     byttbilde *= 1.1
 
-    nerf += 1
-    if nerf >= 20:
-        if spiller1._klikkere > 0:
-            spiller1.autoklik()
-            nerf = 0
+
 
     teller += 1
-    if teller >= 20:
+    if teller >= 40:
         
         if spiller1._klikkere > 0:
             bildexstørelse = 60
