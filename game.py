@@ -16,6 +16,9 @@ byttbilde = 200
 bnumer = 1
 nerf = 0
 teller = 0
+grønlandkjøpt = False
+dragrønnland = False
+
 # Initialiser pygame
 pg.init()
 
@@ -73,6 +76,8 @@ class Spiller:
         self._klikerpris = 100
         self._klikkerkliks = 1
         self._klikerklikspris = 1000
+        self._defendgrønlandpris = 10
+        self._grønnlandcoins = 0
 
 
     def klik(self):
@@ -84,6 +89,8 @@ class Spiller:
 
     def oppgradering(self, sendtin):
         global bilde
+        global dragrønnland
+        global grønlandkjøpt
         if sendtin == "Mer kliks per kliks":
             
             if self._merklikspris <= self._kliks:
@@ -113,7 +120,21 @@ class Spiller:
                 return(f"Du kjøpte {sendtin}")
             else:
                 return(f"Det koster {self._klikerklikspris} du har bare {self._kliks}")
+        
+        if sendtin == "Defend Grønnland":
 
+            if self._defendgrønlandpris <= self._kliks and grønlandkjøpt == False:
+                self._kliks -= self._defendgrønlandpris
+                grønlandkjøpt = True
+                self._defendgrønlandpris = 0
+                return(f" {sendtin}")
+            elif grønlandkjøpt == True:
+                dragrønnland = True
+                return("drar grønland")
+
+            else:
+                return(f"Det koster {self._klikerklikspris} du har bare {self._kliks}")
+        
                 
             
       
@@ -125,7 +146,8 @@ spiller1 = Spiller(navn)
 upgrades = [
 {"navn": "Mer kliks per kliks","rect": pg.Rect(650, 50, 140, 40),"pris": spiller1._merklikspris},
 {"navn": "Klikkere","rect": pg.Rect(650, 100, 140, 40), "pris": spiller1._klikerpris},
-{"navn": "Klikkerper","rect": pg.Rect(650, 150, 140, 40), "pris": spiller1._klikerklikspris}
+{"navn": "Klikkerper","rect": pg.Rect(650, 150, 140, 40), "pris": spiller1._klikerklikspris},
+{"navn": "Defend Grønnland","rect": pg.Rect(650, 200, 140, 40), "pris": spiller1._defendgrønlandpris}
 ]
 
 
@@ -133,12 +155,20 @@ upgrades = [
 
 
 def tegnuppgrades():
-  for upgrade in upgrades:
-    pg.draw.rect(skjerm, (80, 80, 80), upgrade["rect"] )
-    pg.draw.rect(skjerm, "white", upgrade["rect"], 2)
+    
+    upgrades = [
+    {"navn": "Mer kliks per kliks","rect": pg.Rect(650, 50, 140, 40),"pris": spiller1._merklikspris},
+    {"navn": "Klikkere","rect": pg.Rect(650, 100, 140, 40), "pris": spiller1._klikerpris},
+    {"navn": "Klikkerper","rect": pg.Rect(650, 150, 140, 40), "pris": spiller1._klikerklikspris},
+    {"navn": "Defend Grønnland","rect": pg.Rect(650, 200, 140, 40), "pris": spiller1._defendgrønlandpris}
+    ]
 
-    tekst = TEKST.render(upgrade["navn"] + f" {upgrade["pris"]}", True, "white")
-    skjerm.blit(tekst,(upgrade["rect"].x + 5, upgrade["rect"].y + 10))
+    for upgrade in upgrades:
+        pg.draw.rect(skjerm, (80, 80, 80), upgrade["rect"] )
+        pg.draw.rect(skjerm, "white", upgrade["rect"], 2)
+
+        tekst = TEKST.render(upgrade["navn"] + f" {upgrade["pris"]}", True, "white")
+        skjerm.blit(tekst,(upgrade["rect"].x + 5, upgrade["rect"].y + 10))
 
 def tegntekstantall():
     tingduhar = [
@@ -178,6 +208,14 @@ def adklikerbilde():
         
 
 bildenå = pg.image.load("Pygame/Klikker/bilder/Trump1.png").convert_alpha()
+grønlandbilde = pg.image.load("Pygame/Klikker/bilder/grønnland.png").convert_alpha()
+grønlandbilde = pg.transform.scale(grønlandbilde, (radius*2, radius*2))
+pilbilde = pg.image.load("Pygame/Klikker/bilder/pil.png").convert_alpha()
+pilbilde = pg.transform.scale(pilbilde, (80, 50))
+
+pil_rect = pilbilde.get_rect(center=(50, 40))
+grønland_rect = grønlandbilde.get_rect(center=(sirkelx, sirkely))
+
 bilde = bildenå
 bilde_sirkel = pg.transform.scale(bilde, (radius*2, radius*2))
 
@@ -235,9 +273,7 @@ while True:
                 if upgrade["rect"].collidepoint(hendelse.pos):
                     tekst = spiller1.oppgradering(upgrade["navn"])
                     tekstgi = TEKST.render(tekst, True, "white")
-                    upgrades[0]["pris"] = spiller1._merklikspris
-                    upgrades[1]["pris"] = spiller1._klikerpris
-                    upgrades[2]["pris"] = spiller1._klikerklikspris
+
             if byttbilde < spiller1._alltidkliks and bnumer != 11:
                 bnumer += 1
                 bildenå = pg.image.load(f"Pygame/Klikker/bilder/Trump{bnumer}.png").convert_alpha()
@@ -280,6 +316,22 @@ while True:
     
     tegnuppgrades()
     tegntekstantall()
+    while dragrønnland:
+        skjerm.fill('black')
+        skjerm.blit(pilbilde, (50 - pilbilde.get_width()//2, 40 - pilbilde.get_height()//2))
+        skjerm.blit(grønlandbilde, (sirkelx - radius, sirkely - radius))
+        for hendelse in pg.event.get():
+            if hendelse.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+            if hendelse.type == pg.MOUSEBUTTONDOWN:
+
+                if pil_rect.collidepoint(hendelse.pos):
+                    dragrønnland = False
+
+        pg.display.update()
+        klokke.tick(60)
+
 
 
     pg.display.update()
