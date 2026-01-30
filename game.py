@@ -19,7 +19,6 @@ teller = 0
 # Initialiser pygame
 pg.init()
 
-
 posklikers = []
 klikkers =[ ]
 
@@ -30,16 +29,16 @@ qotessure = ["Wrong!", "Fake news.", "Sad!", "Total disaster.", "Disgraceful.", 
 BLOKK_STORELSE = 50
 navn = "spiller"
 # Font størrelse og utsene 
-FONT = pg.font.Font("Pygame/Klikker/font.ttf", 30)
-TEKST = pg.font.Font("Pygame/Klikker/font.ttf", 15)
-QOTETEKST = pg.font.Font("Pygame/Klikker/font.ttf", 13)
+FONT = pg.font.SysFont("arial", 30)
+TEKST = pg.font.SysFont("arial", 15)
+QOTETEKST = pg.font.SysFont('arial', 15, bold=False) 
 skjerm = pg.display.set_mode((SW, SH))
 pg.display.set_caption("Klikker")
 klokke = pg.time.Clock()
 velg = True
 while velg:
     skjerm.fill("black")
-    tittel = FONT.render("KLIKKER", True, "green")
+    tittel = FONT.render("TRUMP KLIKKER", True, "orange")
     tekst1 = FONT.render("Trykk 1 for å starte spiller", True, "white")
 
     skjerm.blit(tittel, (SW//2 - tittel.get_width()//2, SH//4))
