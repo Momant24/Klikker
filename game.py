@@ -31,11 +31,15 @@ qotessure = ["Wrong!", "Fake news.", "Sad!", "Total disaster.", "Disgraceful.", 
 
 BLOKK_STORELSE = 50
 navn = "spiller"
+
 # Font størrelse og utsene 
+
 FONT = pg.font.SysFont("arial", 30)
 TEKST = pg.font.SysFont("arial", 15)
 QOTETEKST = pg.font.SysFont('arial', 15, bold=False) 
+
 skjerm = pg.display.set_mode((SW, SH))
+
 pg.display.set_caption("Klikker")
 klokke = pg.time.Clock()
 velg = True
@@ -75,7 +79,7 @@ class Spiller:
         self._klikkere = 0
         self._klikerpris = 100
         self._klikkerkliks = 1
-        self._klikerklikspris = 1000
+        self._klikerklikspris = 5
         self._defendgrønlandpris = 10
         self._grønnlandcoins = 0
 
@@ -113,13 +117,13 @@ class Spiller:
             else:
                 return(f"Det koster {self._klikerpris}")
         if sendtin == "Klikkerper":
-            if self._klikerklikspris <= self._kliks:
-                self._kliks -= self._klikerklikspris
+            if self._klikerklikspris <= self._grønnlandcoins:
+                self._grønnlandcoins -= self._klikerklikspris
                 self._klikkerkliks += 1
-                self._klikerklikspris = round(self._klikerklikspris * 1.1)
+                self._klikerklikspris = self._klikerklikspris * 2
                 return(f"Du kjøpte {sendtin}")
             else:
-                return(f"Det koster {self._klikerklikspris} du har bare {self._kliks}")
+                return(f"Det koster {self._klikerklikspris} du har {self._grønnlandcoins} Grønnlandcoins")
         
         if sendtin == "Defend Grønnland":
 
@@ -146,7 +150,7 @@ spiller1 = Spiller(navn)
 upgrades = [
 {"navn": "Mer kliks per kliks","rect": pg.Rect(650, 50, 140, 40),"pris": spiller1._merklikspris},
 {"navn": "Klikkere","rect": pg.Rect(650, 100, 140, 40), "pris": spiller1._klikerpris},
-{"navn": "Klikkerper","rect": pg.Rect(650, 150, 140, 40), "pris": spiller1._klikerklikspris},
+{"navn": "Klikkerper","rect": pg.Rect(650, 150, 140, 40), "pris": f"{spiller1._klikerklikspris}G"},
 {"navn": "Defend Grønnland","rect": pg.Rect(650, 200, 140, 40), "pris": spiller1._defendgrønlandpris}
 ]
 
@@ -159,7 +163,7 @@ def tegnuppgrades():
     upgrades = [
     {"navn": "Mer kliks per kliks","rect": pg.Rect(650, 50, 140, 40),"pris": spiller1._merklikspris},
     {"navn": "Klikkere","rect": pg.Rect(650, 100, 140, 40), "pris": spiller1._klikerpris},
-    {"navn": "Klikkerper","rect": pg.Rect(650, 150, 140, 40), "pris": spiller1._klikerklikspris},
+    {"navn": "Klikkerper","rect": pg.Rect(650, 150, 140, 40), "pris": f"{spiller1._klikerklikspris}G"},
     {"navn": "Defend Grønnland","rect": pg.Rect(650, 200, 140, 40), "pris": spiller1._defendgrønlandpris}
     ]
 
@@ -230,7 +234,43 @@ qotestekst = QOTETEKST.render(tekst3, True, "white")
 
 tekstgi = TEKST.render("", True, "white")
 
+mål_x = SW//2
+mål_y = SH//2
+angripere = []
 
+def nyttangrep():
+    bildeangrip = pg.image.load("Pygame/Klikker/bilder/Trump1.png").convert_alpha()
+    bildeangrip = pg.transform.scale(bildeangrip, (40, 40))
+
+    side = random.choice(["Top", "Bun", "Høyre", "Venstre"])
+
+    if side == "Top":
+        x, y = random.randint(0, SW), -40
+    elif side == "Bun":
+        x, y = random.randint(0, SW), SH + 40
+    elif side == "Høyre":
+        x, y = SW + 40, random.randint(0, SH)
+    elif side == "Venstre":
+        x, y = -40, random.randint(0, SH)
+    
+    rect = bildeangrip.get_rect(center=(x, y))
+
+    dx = mål_x - x
+    dy = mål_y - y
+    lengde = (dx **2 + dy ** 2) ** 0.5
+
+    fart = 2
+
+    vx = dx / lengde * fart
+    vy = dy / lengde * fart
+
+    angripere.append({"img": bildeangrip, "rect": rect, "vx": vx, "vy": vy})
+
+def oppdaterangrep():
+    for a in angripere:
+        a["rect"].x += a["vx"]
+        a["rect"].y += a["vy"]
+        skjerm.blit(a["img"], a["rect"])
 
 while True:
     bilde_sirkel = pg.transform.scale(bilde, (radius*2, radius*2))
@@ -307,9 +347,11 @@ while True:
     skjerm.blit(bilde_sirkel, (sirkelx - radius, sirkely - radius))
 
     score = FONT.render(f"Antal kliks: {spiller1._kliks}", True, "white")
+    grøncoin = TEKST.render(f"Antal Grønncoins: {spiller1._grønnlandcoins}", True, "white")
 
-    skjerm.blit(tekstgi, (SW/2 - tekstgi.get_width()//2, 50))
-    skjerm.blit(tekstgi2, (SW/4 - tekstgi2.get_width()//2, 300))
+    skjerm.blit(tekstgi, (SW/2 - tekstgi.get_width()//2, 70))
+    skjerm.blit(tekstgi2, (SW/4 - tekstgi2.get_width()//2, 300))     
+    skjerm.blit(grøncoin, (SW/2 - grøncoin.get_width()//2, 50))
     skjerm.blit(qotestekst, (SW/2 - qotestekst.get_width()//2, 450))
     skjerm.blit(score, (SW/2 - score.get_width()//2, 10))
 
@@ -325,9 +367,29 @@ while True:
                 pg.quit()
                 sys.exit()
             if hendelse.type == pg.MOUSEBUTTONDOWN:
-
+                mus = hendelse.pos
                 if pil_rect.collidepoint(hendelse.pos):
                     dragrønnland = False
+                for a in angripere:
+                    if a["rect"].collidepoint(mus):
+                        angripere.remove(a)
+                        spiller1._grønnlandcoins += 1
+        for a in angripere:
+            if a["rect"].colliderect(grønland_rect):
+                angripere.remove(a)
+                if spiller1._grønnlandcoins > 0:
+                    spiller1._grønnlandcoins -= 1
+                else:
+                    dragrønnland = False
+
+
+        grøncoin = FONT.render(f"Antal Grønncoins: {spiller1._grønnlandcoins}", True, "white")
+        skjerm.blit(grøncoin, (SW/2 - grøncoin.get_width()//2, 20))
+
+        if random.randint(1, 60) == 1:
+            nyttangrep()
+        
+        oppdaterangrep()
 
         pg.display.update()
         klokke.tick(60)
